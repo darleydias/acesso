@@ -58,15 +58,11 @@ class CartaoPessoaController extends Controller
      */
     public function testaCartao(Request $request,string $codCartao)
     {   
-            
-            //$cartao = Cartao::select("*")->where('cartao_cod', "HFTRED497690890JKHKJ")->get();
-            $cartao = Cartao::all()->first();
-
-            // if(Cartao::select("id")->where('cartao_cod', '=', $codCartao)->get(['id'])){
-            var_dump($cartao->cartao_cod);
-            return $cartao;
-            // }else{
-            //     return "0";
-            // }
+                //$cartao = Cartao::all()->where('cartao_cod',$codCartao)->first();
+                    if((!Cartao::all()->where('cartao_cod',$codCartao)->count()) < 1){
+                        return 1;
+                    }else{
+                        return 0;
+                }
     }
 }

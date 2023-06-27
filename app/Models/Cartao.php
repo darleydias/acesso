@@ -10,8 +10,8 @@ class Cartao extends Model
     use HasFactory;
     protected $table = 'cartao';
 
-    protected $fillable = [
+    protected $fillable = array(
         'cartao_cod',
         'cartao_dtAtivacao'
-    ];
+    );
 }
