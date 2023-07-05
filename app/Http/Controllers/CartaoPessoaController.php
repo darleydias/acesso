@@ -58,11 +58,12 @@ class CartaoPessoaController extends Controller
      */
     public function testaCartao(Request $request,string $codCartao)
     {   
-                //$cartao = Cartao::all()->where('cartao_cod',$codCartao)->first();
-                    if((!Cartao::all()->where('cartao_cod',$codCartao)->count()) < 1){
-                        return 1;
-                    }else{
-                        return 0;
-                }
+        try {
+                $cartao = Cartao::all()->where('cartao_cod',$codCartao)->first();
+                return $cartao->id;   
+            
+        }catch (\Exception $e) {
+                return 0;       
+        }
     }
 }

@@ -40,26 +40,32 @@ void loop() {
     if(WiFi.status()== WL_CONNECTED){
       WiFiClient client;
       HTTPClient http;
-      String serverName = "http://192.168.0.37:8000/api/cartaoPessoa/valida/";
+      String serverName = "http://192.168.0.50:8000/api/cartaoPessoa/valida/";
       String serverPath = serverName + "HFTRED497%%%%%%%%%%%%%";
-      http.begin(client, serverPath.c_str());
-  
-
-      // Send HTTP GET request
-      int httpResponseCode = http.GET();
-      
-      if (httpResponseCode>0) {
-        Serial.print("HTTP Response code: ");
-        Serial.println(httpResponseCode);
-        String payload = http.getString();
-        Serial.println(payload);
-      }
-      else {
-        Serial.print("Error code: ");
-        Serial.println(httpResponseCode);
-      }
-      // Free resources
-      http.end();
+          int estado = digitalRead(botao);
+          Serial.println(estado);
+          if(estado==1){
+             http.begin(client, serverPath.c_str());
+             // Send HTTP GET request
+             int httpResponseCode = http.GET();
+            if (httpResponseCode>0) {
+              Serial.print("HTTP Response code: ");
+              Serial.println(httpResponseCode);
+              String payload = http.getString();
+              Serial.println(payload);
+              // grava log de acesso
+              serverName = "http://192.168.0.50:8000/api/cartaoPessoa/valida/";
+              serverPath = serverName + "HFTRED497%%%%%%%%%%%%%";
+              http.begin(client, serverPath.c_str());
+              httpResponseCode = http.GET();
+            }
+            else {
+              Serial.print("Error code: ");
+              Serial.println(httpResponseCode);
+            }
+            // Free resources
+            http.end();
+          }
     }
     else {
       Serial.println("WiFi Disconnected");

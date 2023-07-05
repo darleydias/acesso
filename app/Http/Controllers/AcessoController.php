@@ -21,18 +21,16 @@ class AcessoController extends Controller
      */
     public function store(Request $request)
     {
-        $result = Cartao::select("id")->where('cartao_cod', '=', $request->cartao_cod)->get(['id']);
+        //$result = Cartao::select("id")->where('cartao_cod', '=',$request->cartao_cod)->get(['id']);
 
-        if($result !=""){
+       // if($result !=""){
             return Acesso::create([
                 'local_id' => $request->local_id,
-                'cartao_id' => $result->id
-                ]
+                'cartao_id' => $request->cartao_id               ]
             );
-        }else{
-            return "Cartao não encontrado";
-        }
-        
+       // }else{
+       //     return "Cartao não encontrado";
+      //  }
     }
 
     /**

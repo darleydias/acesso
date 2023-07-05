@@ -27,6 +27,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
             Route::get('/cartao/{id}',[CartaoController::class,'show']);
             Route::put('/cartao/{id}',[CartaoController::class,'update']);
             Route::delete('/cartao/{id}',[CartaoController::class,'destroy']);
+            Route::post('/logout',[AuthController::class,'logout']);
 });
             // ########  LOCAL ################
             Route::get('/local',[LocalController::class,'index']);
