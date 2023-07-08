@@ -22,6 +22,20 @@ class LocalController extends Controller
     {
         return Local::create($request->all());
     }
+     /**
+     * Store a newly created resource in storage.
+     */
+    public function listaAcessos(string $id)
+    {
+        $locaL = Local::find($id);
+        if($local){
+            $response = [
+                'local'=>$locaL,
+                'acesso'=>$local->acessos
+            ];
+        }
+        return $response;
+    }
 
     /**
      * Display the specified resource.

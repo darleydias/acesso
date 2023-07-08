@@ -33,6 +33,7 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
             Route::get('/local',[LocalController::class,'index']);
             Route::post('/local',[LocalController::class,'store']);
             Route::get('/local/{id}',[LocalController::class,'show']);
+            Route::get('/local/acessos/{id}',[LocalController::class,'listaAcessos']);
             Route::put('/local/{id}',[LocalController::class,'update']);
             Route::delete('/local/{id}',[LocalController::class,'destroy']);
 
