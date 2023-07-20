@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('email', 100)->nullable();
             $table->string('celular', 100)->nullable();
             $table->integer('id_setor')->unsigned();
+            $table->integer('visitante')->nullable()->default(0);
+            $table->string('path_image')->nullable();
             $table->timestamps();
             $table->softDeletes();
             

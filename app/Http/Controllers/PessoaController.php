@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pessoa;
+use App\Models\CartaoPessoa;
 use App\Models\Setor;
 
 class PessoaController extends Controller
@@ -49,6 +50,15 @@ class PessoaController extends Controller
             return "pessoa não encontrado";       
         }   
     }
+    public function showByidCartao($id)
+    {
+       return CartaoPessoa::leftJoin('pessoa', 'pessoa.id', '=', 'cartao_pessoa.pessoa_id')
+        ->leftJoin('cartao', 'cartao.id', '=', 'cartao_pessoa.cartao_id')
+        ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
+        ->whereNotNull('cartao.cartao_cod')
+        ->where('cartao.id',$id) // Só os de hoje
+        ->select('cartao.id as id_cartao', 'pessoa.id as id_pessoa','pessoa.nomeCompleto','setor.nome as setor','pessoa.celular','pessoa.path_image')->get()->all();
+    }
 
     /**
      * Update the specified resource in storage.
@@ -88,4 +98,16 @@ class PessoaController extends Controller
             return "pessoa não encontrado";       
         }   
     }
+    public function adicionaFoto(Request $request,string $id)
+    {   
+        try {
+              $pessoa= Pessoa::where('id', $id)
+              ->update(['path_image' => $request->path_image]);
+              return ['msg'=>'Foto de '.$pessoa->nomeCompleto.' Atualizada'];
+
+        }catch (\Exception $e) {
+                return 0;       
+        }
+    }
+
 }

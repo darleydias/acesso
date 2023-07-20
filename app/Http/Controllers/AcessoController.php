@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
+use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Http\Request;
 use App\Models\Acesso;
 use App\Models\Cartao;
+use App\Models\Local;
 
 class AcessoController extends Controller
 {
@@ -13,38 +16,100 @@ class AcessoController extends Controller
      */
     public function index()
     {
-       //return Acesso::where('acesso.acesso_DH', '2023-07-20')
-       return Acesso::leftJoin('cartao', 'cartao_pessoa.cartao_id', '=', 'cartao.id')
-        ->leftJoin('pessoa', 'cartao_pessoa.pessoa_id', '=', 'pessoa.id')
-        ->leftJoin('acesso', 'acesso.cartao_id', '=', 'cartao.id')
-        ->leftJoin('local', 'acesso.local_id', '=', 'local.id')
+       return Acesso::leftJoin('cartao', 'acesso.cartao_id', '=', 'cartao.id')
+        ->leftJoin('cartao_pessoa', 'cartao_pessoa.cartao_id', '=', 'acesso.cartao_id')
+        ->leftJoin('pessoa', 'pessoa.id', '=', 'cartao_pessoa.pessoa_id')
+        ->leftJoin('local', 'local.id', '=', 'acesso.local_id')
+        ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
         ->whereNotNull('cartao.cartao_cod')
-        ->select('pessoa.nomeCompleto','local.local_nome','cartao.cartao_cod')->get()->all();
+        ->whereRaw('acesso.acesso_DH >= curdate()') // Só os de hoje
+        ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all();
     }
-
+    public function indexInterval(Request $request)
+    {
+       if($request->inicial==""){ // Senão foi informada a data inicial retorna
+        return ['msg'=>'informe a data inicial'];
+       } 
+       if($request->final==""){ // foi informada a inicial mas a final não. Então considera até hoje. 
+            return Acesso::leftJoin('cartao', 'acesso.cartao_id', '=', 'cartao.id')
+            ->leftJoin('cartao_pessoa', 'cartao_pessoa.cartao_id', '=', 'acesso.cartao_id')
+            ->leftJoin('pessoa', 'pessoa.id', '=', 'cartao_pessoa.pessoa_id')
+            ->leftJoin('local', 'local.id', '=', 'acesso.local_id')
+            ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
+            ->whereNotNull('cartao.cartao_cod')
+            ->whereRaw('acesso.acesso_DH >?',[$request->inicial])
+            ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all(); 
+       }else{
+            return Acesso::leftJoin('cartao', 'acesso.cartao_id', '=', 'cartao.id')
+            ->leftJoin('cartao_pessoa', 'cartao_pessoa.cartao_id', '=', 'acesso.cartao_id')
+            ->leftJoin('pessoa', 'pessoa.id', '=', 'cartao_pessoa.pessoa_id')
+            ->leftJoin('local', 'local.id', '=', 'acesso.local_id')
+            ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
+            ->whereNotNull('cartao.cartao_cod')
+            ->whereBetween('acesso.acesso_DH', [$request->inicial, $request->final])
+            ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all(); 
+       }
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //$result = Cartao::select("id")->where('cartao_cod', '=',$request->cartao_cod)->get(['id']);
-
-       // if($result !=""){
+        try{
+            $result = Cartao::findOrFail($request->cartao_id);
+        }catch(\Exception $e){
+            return ['msg'=>'Cartao não encontrado'];
+        }
+        try{
+            $result = Local::findOrFail($request->local_id);
+        }catch(\Exception $e){
+            return ['msg'=>'Local não encontrado'];
+        }
+        try{
             return Acesso::create([
-                'local_id' => $request->local_id,
-                'cartao_id' => $request->cartao_id               ]
-            );
-       // }else{
-       //     return "Cartao não encontrado";
-      //  }
+                    'local_id' => $request->local_id,
+                    'cartao_id' => $request->cartao_id               ]
+                );
+        }catch(\Exception $e){
+            return ['msg'=>'Acesso não registrado'];
+        }  
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showByPerson(string $id)
     {
-        return Acesso::findOrFail($id);
+        $acesso=Acesso::leftJoin('cartao', 'acesso.cartao_id', '=', 'cartao.id')
+        ->leftJoin('cartao_pessoa', 'cartao_pessoa.cartao_id', '=', 'acesso.cartao_id')
+        ->leftJoin('pessoa', 'pessoa.id', '=', 'cartao_pessoa.pessoa_id')
+        ->leftJoin('local', 'local.id', '=', 'acesso.local_id')
+        ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
+        ->whereNotNull('cartao.cartao_cod')
+        ->where('pessoa.id',$id)
+        ->select('acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all();
+        if(!empty($acesso)){
+            return $acesso;
+        }else{
+            return ['msg'=>'acessos não encontrados para a pessoa'];
+        }
+    }
+    public function showByCard(string $id)
+    {
+         
+        $acesso=Acesso::leftJoin('cartao', 'acesso.cartao_id', '=', 'cartao.id')
+        ->leftJoin('cartao_pessoa', 'cartao_pessoa.cartao_id', '=', 'acesso.cartao_id')
+        ->leftJoin('pessoa', 'pessoa.id', '=', 'cartao_pessoa.pessoa_id')
+        ->leftJoin('local', 'local.id', '=', 'acesso.local_id')
+        ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
+        ->whereNotNull('cartao.cartao_cod')
+        ->where('cartao.id',$id)
+        ->select('acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all();
+        if(!empty($acesso)){
+            return $acesso;
+        }else{
+            return ['msg'=>'acessos não encontrados para o cartao informado'];
+        }
     }
     
     /**

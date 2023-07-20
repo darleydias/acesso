@@ -66,4 +66,5 @@ class CartaoPessoaController extends Controller
                 return 0;       
         }
     }
+
 }

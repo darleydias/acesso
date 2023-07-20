@@ -8,7 +8,10 @@ use App\Http\Controllers\CartaoPessoaController;
 use App\Http\Controllers\AcessoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SetorController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PessoaController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +35,12 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
  Route::put('/cartao/{id}',[CartaoController::class,'update']);
  Route::delete('/cartao/{id}',[CartaoController::class,'destroy']);
  Route::post('/logout',[AuthController::class,'logout']);
+
+// ########  IMAGEM ################
+
+Route::get('image/{path}', [ImageController::class, 'getImage'])->where('path', '.*');
+Route::post('image', [ImageController::class, 'uploadImage']);
+
 // ########  LOCAL ################
 Route::get('/local',[LocalController::class,'index']);
 Route::post('/local',[LocalController::class,'store']);
@@ -47,12 +56,17 @@ Route::get('/cartaoPessoa/{id}',[CartaoPessoaController::class,'show']);
 Route::put('/cartaoPessoa/{id}',[CartaoPessoaController::class,'update']);
 Route::delete('/cartaoPessoa/{id}',[CartaoPessoaController::class,'destroy']);
 Route::get('/cartaoPessoa/valida/{codCartao}',[CartaoPessoaController::class,'testaCartao']);
+
+
 // #################  Acesso #################
 Route::get('/acesso',[AcessoController::class,'index']);
 Route::post('/acesso',[AcessoController::class,'store']);
-Route::get('/acesso/{id}',[AcessoController::class,'show']);
+Route::post('/acesso/filtro_data',[AcessoController::class,'indexInterval']);
+Route::get('/acesso/pessoa/{id}',[AcessoController::class,'showByPerson']);
+Route::get('/acesso/cartao/{id}',[AcessoController::class,'showByCard']);
 Route::put('/acesso/{id}',[AcessoController::class,'update']);
 Route::delete('/acesso/{id}',[AcessoController::class,'destroy']);
+
 
 // #################  Setor #################
 Route::get('/setor',[SetorController::class,'index']);
@@ -65,7 +79,13 @@ Route::delete('/setor/{id}',[SetorController::class,'destroy']);
 Route::get('/pessoa',[PessoaController::class,'index']);
 Route::post('/pessoa',[PessoaController::class,'store']);
 Route::get('/pessoa/{id}',[PessoaController::class,'show']);
+Route::get('/pessoa/cartao/{id}',[PessoaController::class,'showByidCartao']);
 Route::put('/pessoa/{id}',[PessoaController::class,'update']);
 Route::delete('/pessoa/{id}',[PessoaController::class,'destroy']);
+Route::patch('/pessoa/{id}',[PessoaController::class,'adicionaFoto']);
+
+
+
+
 
 
