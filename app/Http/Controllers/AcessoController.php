@@ -13,7 +13,13 @@ class AcessoController extends Controller
      */
     public function index()
     {
-        return Acesso::all();
+       //return Acesso::where('acesso.acesso_DH', '2023-07-20')
+       return Acesso::leftJoin('cartao', 'cartao_pessoa.cartao_id', '=', 'cartao.id')
+        ->leftJoin('pessoa', 'cartao_pessoa.pessoa_id', '=', 'pessoa.id')
+        ->leftJoin('acesso', 'acesso.cartao_id', '=', 'cartao.id')
+        ->leftJoin('local', 'acesso.local_id', '=', 'local.id')
+        ->whereNotNull('cartao.cartao_cod')
+        ->select('pessoa.nomeCompleto','local.local_nome','cartao.cartao_cod')->get()->all();
     }
 
     /**
@@ -57,4 +63,5 @@ class AcessoController extends Controller
     {
         return Acesso::destroy($id);
     }
+
 }

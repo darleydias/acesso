@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CartaoPessoa extends Model
+class Funcionalidade_grupo extends Model
 {
     use HasFactory;
-    protected $table = 'cartao_pessoa';
-    protected $fillable= ['cartao_id','pessoa_id','cartaoPessoa_dtEntrega'];
+    protected $table = 'pessoa_cartao';
+
 }

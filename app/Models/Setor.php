@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Local extends Model
+class Setor extends Model
 {
     use HasFactory;
-    protected $table = 'local';
-    protected $fillable = ['local_nome'];
+    protected $table = 'setor';
+    protected $fillable = ['nome'];
     use SoftDeletes;
     protected $dates = ['deleted_at'];
-
-    public function acessos(){
-        return $this->hasMany(Acesso::class);
+    public function funcionarios(){
+        return $this->hasMany(Pessoa::class);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cartao extends Model
 {
@@ -14,4 +15,9 @@ class Cartao extends Model
         'cartao_cod',
         'cartao_dtAtivacao'
     );
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
+    public function pessoa(){ 
+        return $this->belongsToMany(Pessoa::class,'cartao_pessoa');
+    }
 }

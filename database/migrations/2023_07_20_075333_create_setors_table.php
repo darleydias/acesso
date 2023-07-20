@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cartao_pessoa', function (Blueprint $table) {
+        Schema::create('setor', function (Blueprint $table) {
             $table->increments('id');
-            $table->biginteger('user_id')->default(20)->unsigned();
-            $table->integer('cartao_id')->unsigned();
-            $table->date('cartaoPessoa_dtEntrega');
+            $table->string('nome', 100);
             $table->timestamps();
-
-            $table->foreign('cartao_id')->references('id')->on('cartao');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->softDeletes();
         });
     }
 
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cartao_pessoa');
+        Schema::dropIfExists('setors');
     }
 };

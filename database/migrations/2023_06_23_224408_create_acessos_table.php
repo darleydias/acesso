@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('cartao_id')->unsigned();
             $table->timestamp('acesso_DH')->useCurrent();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('local_id')->references('id')->on('local');
             $table->foreign('cartao_id')->references('id')->on('cartao');
