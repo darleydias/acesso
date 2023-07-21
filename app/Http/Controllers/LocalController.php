@@ -20,7 +20,10 @@ class LocalController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   
+        $validated = $request->validate([
+            'local_nome' => 'required|min:3|max:255',
+        ]);
         return Local::create($request->all());
     }
      /**

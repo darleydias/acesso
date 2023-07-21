@@ -18,7 +18,7 @@ class CartaoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUpdateCardRequest $request)
+    public function store(Request $request)
     {
         return Cartao::create($request->all());
     }
@@ -34,7 +34,7 @@ class CartaoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreUpdateCardRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         $cartao = Cartao::findOrFail($id);
         return $cartao->update($request->all());
