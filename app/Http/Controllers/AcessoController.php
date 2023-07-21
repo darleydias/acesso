@@ -23,7 +23,7 @@ class AcessoController extends Controller
         ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
         ->whereNotNull('cartao.cartao_cod')
         ->whereRaw('acesso.acesso_DH >= curdate()') // Só os de hoje
-        ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all();
+        ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->paginate(10);
     }
     public function indexInterval(Request $request)
     {
@@ -38,7 +38,7 @@ class AcessoController extends Controller
             ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
             ->whereNotNull('cartao.cartao_cod')
             ->whereRaw('acesso.acesso_DH >?',[$request->inicial])
-            ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all(); 
+            ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->paginate(10); 
        }else{
             return Acesso::leftJoin('cartao', 'acesso.cartao_id', '=', 'cartao.id')
             ->leftJoin('cartao_pessoa', 'cartao_pessoa.cartao_id', '=', 'acesso.cartao_id')
@@ -47,7 +47,8 @@ class AcessoController extends Controller
             ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
             ->whereNotNull('cartao.cartao_cod')
             ->whereBetween('acesso.acesso_DH', [$request->inicial, $request->final])
-            ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all(); 
+            ->select('pessoa.id as pessoa_id','acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->paginate(10); 
+            
        }
     }
     /**
@@ -87,7 +88,7 @@ class AcessoController extends Controller
         ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
         ->whereNotNull('cartao.cartao_cod')
         ->where('pessoa.id',$id)
-        ->select('acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all();
+        ->select('acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->paginate(10);
         if(!empty($acesso)){
             return $acesso;
         }else{
@@ -104,7 +105,7 @@ class AcessoController extends Controller
         ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
         ->whereNotNull('cartao.cartao_cod')
         ->where('cartao.id',$id)
-        ->select('acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->get()->all();
+        ->select('acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->paginate(10);
         if(!empty($acesso)){
             return $acesso;
         }else{

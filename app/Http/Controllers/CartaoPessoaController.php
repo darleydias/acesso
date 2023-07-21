@@ -13,7 +13,7 @@ class CartaoPessoaController extends Controller
      */
     public function index()
     {
-        return CartaoPessoa::all();
+        return CartaoPessoa::paginate(10);
     }
 
     /**

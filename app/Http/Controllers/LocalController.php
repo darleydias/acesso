@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Local;
+use App\Models\Acesso;
 
 class LocalController extends Controller
 {
@@ -27,14 +28,20 @@ class LocalController extends Controller
      */
     public function listaAcessos(string $id)
     {
-        $locaL = Local::find($id);
-        if($local){
-            $response = [
-                'local'=>$locaL,
-                'acesso'=>$local->acessos
-            ];
+        $acesso=Acesso::leftJoin('cartao', 'acesso.cartao_id', '=', 'cartao.id')
+        ->leftJoin('cartao_pessoa', 'cartao_pessoa.cartao_id', '=', 'acesso.cartao_id')
+        ->leftJoin('pessoa', 'pessoa.id', '=', 'cartao_pessoa.pessoa_id')
+        ->leftJoin('local', 'local.id', '=', 'acesso.local_id')
+        ->leftJoin('setor', 'setor.id', '=', 'pessoa.id_setor')
+        ->whereNotNull('cartao.cartao_cod')
+        ->where('local.id',$id)
+        ->select('acesso.acesso_DH','pessoa.nomeCompleto','local.local_nome')->paginate(10);
+        if(!empty($acesso)){
+            return $acesso;
+        }else{
+            return ['msg'=>'acessos não encontrados para a pessoa'];
         }
-        return $response;
+        
     }
 
     /**

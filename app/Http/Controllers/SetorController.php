@@ -12,7 +12,7 @@ class SetorController extends Controller
      */
     public function index()
     {
-        $setores = Setor::all();  
+        $setores = Setor::paginate(10);  
         if(empty($setores)){
             return ['msg'=>'Nenhum setor cadastrado'];
         }else{

@@ -17,7 +17,7 @@ class PessoaController extends Controller
         if(is_null(Pessoa::first())){
             return ['msg'=>'Nenhuma pessoa cadastrada'];
         }else{
-            return Pessoa::all();
+            return Pessoa::paginate(10);
         }
 
     }
@@ -27,15 +27,17 @@ class PessoaController extends Controller
      */
     public function store(Request $request)
     {
+        //$request->validate(['nomeCompleto'=>'required']);
         try{
             try{
                 $setor = Setor::findOrFail($request->id_setor);
             }catch (\Exception $e) {
-                return "Setor não exite";       
+                return ['msg'=>"Setor não exite"];       
             }  
+            
             return Pessoa::create($request->all()); 
         }catch (\Exception $e) {
-            return "Dados não informados";       
+            return ['msg'=>"Dados não informados"];       
         }  
     }
 
@@ -47,7 +49,7 @@ class PessoaController extends Controller
         try{
             return Pessoa::findOrFail($id);
         }catch (\Exception $e) {
-            return "pessoa não encontrado";       
+            return ['msg'=>"pessoa não encontrada"];       
         }   
     }
     public function showByidCartao($id)
@@ -70,7 +72,7 @@ class PessoaController extends Controller
             $pessoa->update($request->all());
             return ['msg'=>'pessoa atualizado'];
         }catch (\Exception $e) {
-            return "pessoa não encontrado";       
+            return ['msg'=>"pessoa não encontrada"];       
         }   
     }
 
@@ -95,7 +97,7 @@ class PessoaController extends Controller
             $pessoa = Pessoa::findOrFail($id);
             return $pessoa->clientes;
         }catch (\Exception $e) {
-            return "pessoa não encontrado";       
+            return ['msg'=>"pessoa não encontrado"];       
         }   
     }
     public function adicionaFoto(Request $request,string $id)

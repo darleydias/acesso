@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cartao;
-
+use App\Http\Requests\StoreUpdateCardRequest;
 class CartaoController extends Controller
 {
     /**
@@ -12,13 +12,13 @@ class CartaoController extends Controller
      */
     public function index()
     {
-        return Cartao::all();
+        return Cartao::paginate(10);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateCardRequest $request)
     {
         return Cartao::create($request->all());
     }
@@ -34,7 +34,7 @@ class CartaoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreUpdateCardRequest $request, string $id)
     {
         $cartao = Cartao::findOrFail($id);
         return $cartao->update($request->all());
