@@ -10,7 +10,7 @@ class Local extends Model
 {
     use HasFactory;
     protected $table = 'local';
-    protected $fillable = ['local_nome'];
+    protected $fillable = ['local_nome','local_mac'];
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 

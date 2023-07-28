@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('local', function (Blueprint $table) {
             $table->increments('id');
             $table->string('local_nome');
+            $table->string('local_mac', 100);
             $table->timestamps();
             $table->softDeletes();
         });

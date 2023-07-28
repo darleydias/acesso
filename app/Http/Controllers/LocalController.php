@@ -23,6 +23,7 @@ class LocalController extends Controller
     {   
         $validated = $request->validate([
             'local_nome' => 'required|min:3|max:255',
+            'local_mac' => 'required'
         ]);
         return Local::create($request->all());
     }
