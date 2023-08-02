@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\Acesso;
 use App\Models\Cartao;
 use App\Models\Local;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+
 
 class AcessoController extends Controller
 {
@@ -67,6 +70,15 @@ class AcessoController extends Controller
             return ['msg'=>'Local não encontrado'];
         }
         try{
+            //################# chamada do servidor de filas #################
+            $process = new Process(['php', '/var/www/html/webSocket/send.php']);
+            $process->run();
+
+    
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+             //################# chamada do servidor de filas #################
             return Acesso::create([
                     'local_id' => $request->local_id,
                     'cartao_id' => $request->cartao_id               ]
