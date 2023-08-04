@@ -21,10 +21,9 @@ class LocalController extends Controller
      */
     public function store(Request $request)
     {   
-        $validated = $request->validate([
-            'local_nome' => 'required|min:3|max:255',
-            'local_mac' => 'required'
-        ]);
+        // $validated = $request->validate([
+        //     'local_nome' => 'required|min:3|max:255'
+        // ]);
         return Local::create($request->all());
     }
      /**
@@ -71,6 +70,13 @@ class LocalController extends Controller
      */
     public function destroy(string $id)
     {
-        Local::destroy($id);
+
+            try{
+                Local::findOrFail($id);
+            }catch(\Exception $e){
+                return ['msg'=>'Local não encontrado'];
+            }
+            Local::destroy($id);
+            return ['msg'=>'Local excluido'];
     }
 }

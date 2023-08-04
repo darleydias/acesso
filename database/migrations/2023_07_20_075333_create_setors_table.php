@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('setor', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome', 100);
-            $table->string('local_mac', 100);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -25,6 +25,7 @@ class SetorController extends Controller
      */
     public function store(Request $request)
     {
+
         try{
             return Setor::create($request->all());
         }catch (\Exception $e) {
