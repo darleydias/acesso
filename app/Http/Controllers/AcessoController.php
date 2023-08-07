@@ -70,15 +70,13 @@ class AcessoController extends Controller
             return ['msg'=>'Local não encontrado'];
         }
         try{
-            //################# chamada do servidor de filas #################
-            $process = new Process(['php', '/var/www/html/webSocket/send.php']);
-            $process->run();
+            //  //################# Atualização de página #################
+ 
+            $client = new \WebSocket\Client("ws://127.0.0.1:8081");
+            $client->text("atualizar");
+            $client->close();
 
-    
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-             //################# chamada do servidor de filas #################
+            //################# Atualização de página #################
             return Acesso::create([
                     'local_id' => $request->local_id,
                     'cartao_id' => $request->cartao_id               ]
